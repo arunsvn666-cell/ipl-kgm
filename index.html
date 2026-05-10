@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Kortlagudem Premier League | Orange Cap | Most 6s/4s | Highest Score</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', system-ui, 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a2a25 0%, #041a17 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #f4f9f0;
+        }
+
+        .dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .game-zone {
+            flex: 2;
+            min-width: 320px;
+            background: rgba(0, 28, 24, 0.85);
+            backdrop-filter: blur(4px);
+            border-radius: 48px;
+            padding: 24px;
+            border: 1px solid rgba(255, 190, 80, 0.4);
+        }
+
+        .stats-zone {
+            flex: 1.4;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .card {
+            background: rgba(8, 35, 30, 0.92);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 20px;
+            border: 1px solid rgba(255, 200, 100, 0.35);
+        }
+
+        .card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFE0A3, #FFA540);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            border-left: 5px solid #FFB347;
+            padding-left: 16px;
+            margin-bottom: 16px;
+        }
+
+        .village-header {
+            text-align: center;
+            background: linear-gradient(115deg, #1e604f, #0e453b);
+            border-radius: 48px;
+            padding: 14px 12px;
+            margin-bottom: 20px;
+        }
+
+        .main-team-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #FFE6B3, #FF9430);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .team-badge {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0e3b33;
+            border-radius: 60px;
+            padding: 12px 18px;
+            margin: 15px 0;
+            gap: 10px;
+        }
+
+        .team-card {
+            text-align: center;
+            flex: 1;
+        }
+
+        .team-name {
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .vs {
+            font-size: 1.3rem;
+            background: #ffa44770;
+            padding: 5px 16px;
+            border-radius: 40px;
+        }
+
+        .prediction-panel {
+            background: #062b25cc;
+            border-radius: 28px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .team-btn {
+            background: #236b5c;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            color: white;
+        }
+
+        .team-btn.active {
+            background: linear-gradient(145deg, #FFA559, #FF6F3C);
+            color: #121212;
+            box-shadow: 0 0 12px #ffaa55;
+        }
+
+        .simulate-btn {
+            width: 100%;
+            background: linear-gradient(95deg, #FF8C00, #FFD700);
+            border: none;
+            padding: 14px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            border-radius: 60px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .live-scoreboard {
+            background: #0a2f28;
+            border-radius: 28px;
+            padding: 16px;
+            margin-top: 15px;
+            border: 1px solid #ffb34766;
+        }
+
+        .score-digit {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .schedule-list, .players-list {
+            max-height: 180px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+        }
+
+        .schedule-item, .player-item, .record-item {
+            background: #0e4a3e;
+            margin: 6px 0;
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .points-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+        }
+
+        .points-table th, .points-table td {
+            padding: 5px 2px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 210, 100, 0.3);
+        }
+
+        .today-highlight {
+            background: #ffa74433;
+            border-left: 4px solid #FFAA44;
+        }
+
+        .leaderboard-value {
+            color: #FFD966;
+            font-weight: bold;
+        }
+
+        .orange-cap {
+            background: linear-gradient(135deg, #FF8C42, #FF5722);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+
+        .match-date {
+            font-size: 0.7rem;
+            color: #FFC085;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <!-- LEFT GAME ZONE -->
+    <div class="game-zone">
+        <div class="village-header">
+            <div>🏡 KORTLAGUDEM PREMIER LEAGUE 🏡</div>
+            <div class="main-team-name">⚡ KGM SUPERSTARS ⚡</div>
+            <div style="font-size:0.7rem;">Season 2025 | Orange Cap Race | Most Sixes/Fours</div>
+        </div>
+
+        <!-- Live Scoreboard -->
+        <div class="live-scoreboard" id="liveScoreboard">
+            <div style="display: flex; justify-content: space-between;">
+                <span>🏏 LIVE SCORE - TODAY'S MATCH</span>
+                <span id="liveStatus">⚡ Match not started</span>
+            </div>
+            <div id="liveScoreDetails" style="text-align: center; margin-top: 12px;">
+                <span style="font-size:1rem;">👉 Predict Toss & Winner to Simulate 👈</span>
+            </div>
+        </div>
+
+        <div class="team-badge" id="matchTeamsContainer">
+            <div class="team-card"><span class="team-name">🦁 KGM</span><br><span>Akshay(C)+6</span></div>
+            <div class="vs">VS</div>
+            <div class="team-card"><span class="team-name" id="opponentName">⚡ NKP</span><br><span id="opponentFull">Nelakondapally</span></div>
+        </div>
+        <div class="match-date" id="matchDateDisplay" style="text-align:center; margin-bottom:5px;">📅 Match Date: 15 May 2025</div>
+
+        <div class="prediction-panel">
+            <div class="pick-group">
+                <label>🎲 PREDICT TOSS WINNER:</label>
+                <div class="btn-group" id="tossBtnGroup">
+                    <button class="team-btn" data-toss="KGM">🏆 KGM win toss</button>
+                    <button class="team-btn" data-toss="OPP">🔥 OPPONENT win toss</button>
+                </div>
+            </div>
+            <div class="pick-group">
+                <label>🏆 PREDICT MATCH WINNER:</label>
+                <div class="btn-group" id="matchBtnGroup">
+                    <button class="team-btn" data-match="KGM">🌟 KGM Victory</button>
+                    <button class="team-btn" data-match="OPP">⚡ Opponent Victory</button>
+                </div>
+            </div>
+            <button class="simulate-btn" id="simulateBtn">🏏 PLAY MATCH | SIMULATE NOW 🏏</button>
+        </div>
+        <div id="resultArea" style="background:#0a362e; border-radius:28px; padding:16px; margin-top:15px; text-align:center;">
+            <div id="dynamicResult">👉 Select Toss & Match Winner, then SIMULATE 👈</div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE STATS -->
+    <div class="stats-zone">
+        <!-- Points Table -->
+        <div class="card">
+            <h2>📊 POINTS TABLE</h2>
+            <table class="points-table" id="pointsTable">
+                <thead><tr><th>Team</th><th>M</th><th>W</th><th>L</th><th>Pts</th><th>NRR</th></tr></thead>
+                <tbody id="pointsTableBody"></tbody>
+            </table>
+            <div style="font-size:0.65rem; margin-top:6px;">*Points change after each match</div>
+        </div>
+
+        <!-- Orange Cap & Most 6s/4s Leaderboards -->
+        <div class="card">
+            <h2>🏆 TOP PERFORMERS 🏆</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <div style="flex:1; background:#0e423a; border-radius:20px; padding:10px;">
+                    <div style="font-size:0.8rem; font-weight:bold;">🥇 ORANGE CAP</div>
+                    <div id="orangeCapHolder" style="font-size:1rem;">-</div>
+                    <div id="orangeCapRuns" style="font-size:0.7rem;">Runs: 0</div>
+                </div>
+                <div style="flex:1; background:#0e423a; border-radius:20px; padding:10px;">
+                    <div style="font-size:0.8rem; font-weight:bold;">💥 MOST SIXES</div>
+                    <div id="mostSixesHolder" style="font-size:1rem;">-</div>
+                    <div id="mostSixesCount" style="font-size:0.7rem;">Sixes: 0</div>
+                </div>
+                <div style="flex:1; background:#0e423a; border-radius:20px; padding:10px;">
+                    <div style="font-size:0.8rem; font-weight:bold;">🔥 MOST FOURS</div>
+                    <div id="mostFoursHolder" style="font-size:1rem;">-</div>
+                    <div id="mostFoursCount" style="font-size:0.7rem;">Fours: 0</div>
+                </div>
+            </div>
+            <div style="background:#0a352e; border-radius:20px; padding:12px; margin-top:5px;">
+                <div style="font-weight:bold;">🏅 HIGHEST INDIVIDUAL SCORE</div>
+                <div id="highestScorecard" style="font-size:0.9rem;">-</div>
+                <div id="highestScorerName" style="font-size:0.75rem;">-</div>
+            </div>
+        </div>
+
+        <!-- Match Schedule -->
+        <div class="card">
+            <h2>📅 MATCH SCHEDULE</h2>
+            <div id="scheduleList" class="schedule-list">Loading...</div>
+        </div>
+
+        <!-- Man of the Match & Recent Records -->
+        <div class="card">
+            <h2>⭐ MAN OF THE MATCH</h2>
+            <div id="motmDisplay" style="font-size:1rem; text-align:center; padding:8px;">🏅 No matches yet</div>
+            <div style="margin-top:12px; font-size:0.7rem; background:#0e423a; border-radius:20px; padding:8px;">
+                <div>📋 RECENT MATCH RECORDS:</div>
+                <div id="recentRecordsList" style="max-height:100px; overflow-y:auto;">-</div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>🌾 Kortlagudem Premier League | Predict Toss & Winner | Orange Cap | Most 6s/4s | Highest Scorecard | Man of the Match 🌾</footer>
+
+<script>
+    // ======================= TEAMS & PLAYERS =======================
+    const ALL_TEAMS = ["KGM", "NKP", "AMG", "RJP", "MNP", "ANG", "CNR"];
+    const TEAM_FULL = {
+        KGM: "Kortlagudem Giants", NKP: "Nelakondapally", AMG: "Ammagudem",
+        RJP: "Rajeshwarapuram", MNP: "Mandrujupally", ANG: "Ananthaangar", CNR: "Chennaram"
+    };
+    
+    // Player lists for each team (for individual performances)
+    const TEAM_PLAYERS = {
+        KGM: ["Akshay", "Pandu", "Jashu", "Sanju", "Surendar", "Venky", "Sandeep", "Karthik", "Rajesh"],
+        NKP: ["Naveen", "Sai Kumar", "Vinod", "Mallesh", "Ravi Teja", "Praveen", "Sridhar", "Ganesh", "Kiran"],
+        AMG: ["Ramesh", "Mahesh", "Suresh", "Prakash", "Vijay", "Nagarjuna", "Sekhar", "Mohan", "Rajendra"],
+        RJP: ["Rajesh", "Anil", "Sunil", "Srinivas", "Pavan", "Vamsi", "Harsha", "Teja", "Charan"],
+        MNP: ["Manoj", "Sandeep Reddy", "Kishore", "Raghu", "Abhinay", "Rakesh", "Sai", "Nithin", "Arjun"],
+        ANG: ["Anand", "Vikram", "Dinesh", "Karthik A", "Prasad", "Guru", "Madhu", "Rahul", "Bhanu"],
+        CNR: ["Chenna", "Sampath", "Naresh", "Varun", "Jagan", "Murali", "Sravan", "Koti", "Bhaskar"]
+    };
+
+    // Stats for teams & individual players
+    let teamStats = {};
+    let playerStats = {}; // { playerName: { runs, sixes, fours, matches, motm } }
+    let matchHistory = [];
+    let schedule = [];
+    let currentMatchIndex = 0;
+    let currentMatch = null;
+
+    // Initialize stats
+    ALL_TEAMS.forEach(team => {
+        teamStats[team] = { played: 0, wins: 0, losses: 0, pts: 0, nrr: 0 };
+        TEAM_PLAYERS[team].forEach(player => {
+            playerStats[player] = { runs: 0, sixes: 0, fours: 0, matches: 0, motm: 0, team: team };
+        });
+    });
+
+    // Generate match schedule (round robin)
+    function generateSchedule() {
+        let matches = [];
+        for (let i = 0; i < ALL_TEAMS.length; i++) {
+            for (let j = i + 1; j < ALL_TEAMS.length; j++) {
+                matches.push({ team1: ALL_TEAMS[i], team2: ALL_TEAMS[j], played: false, winner: null, date: `May ${Math.floor(Math.random() * 20) + 1}, 2025` });
+            }
+        }
+        // shuffle
+        for (let i = matches.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [matches[i], matches[j]] = [matches[j], matches[i]];
+        }
+        return matches.slice(0, 12);
+    }
+
+    schedule = generateSchedule();
+
+    // DOM elements
+    let selectedToss = null;
+    let selectedMatchWinner = null;
+    const tossBtns = document.querySelectorAll('[data-toss]');
+    const matchBtns = document.querySelectorAll('[data-match]');
+    const simulateBtn = document.getElementById('simulateBtn');
+    const opponentNameSpan = document.getElementById('opponentName');
+    const opponentFullSpan = document.getElementById('opponentFull');
+    const dynamicResultDiv = document.getElementById('dynamicResult');
+    const pointsTableBody = document.getElementById('pointsTableBody');
+    const scheduleListDiv = document.getElementById('scheduleList');
+    const liveScoreDetails = document.getElementById('liveScoreDetails');
+    const liveStatusSpan = document.getElementById('liveStatus');
+    const orangeCapHolder = document.getElementById('orangeCapHolder');
+    const orangeCapRuns = document.getElementById('orangeCapRuns');
+    const mostSixesHolder = document.getElementById('mostSixesHolder');
+    const mostSixesCount = document.getElementById('mostSixesCount');
+    const mostFoursHolder = document.getElementById('mostFoursHolder');
+    const mostFoursCount = document.getElementById('mostFoursCount');
+    const highestScorecard = document.getElementById('highestScorecard');
+    const highestScorerName = document.getElementById('highestScorerName');
+    const motmDisplay = document.getElementById('motmDisplay');
+    const recentRecordsList = document.getElementById('recentRecordsList');
+    const matchDateDisplay = document.getElementById('matchDateDisplay');
+
+    let highestIndividualScore = { runs: 0, player: "", team: "" };
+
+    function loadNextMatch() {
+        if (currentMatchIndex >= schedule.length) {
+            // tournament over, reset option
+            if (confirm("🏆 Season Complete! Reset for new season?")) resetTournament();
+            else return;
+        }
+        currentMatch = schedule[currentMatchIndex];
+        const team1 = currentMatch.team1;
+        const team2 = currentMatch.team2;
+        matchDateDisplay.innerText = `📅 Match Date: ${currentMatch.date}`;
+        
+        if (team1 === "KGM") {
+            opponentNameSpan.innerHTML = `⚡ ${team2}`;
+            opponentFullSpan.innerHTML = TEAM_FULL[team2];
+        } else if (team2 === "KGM") {
+            opponentNameSpan.innerHTML = `⚡ ${team1}`;
+            opponentFullSpan.innerHTML = TEAM_FULL[team1];
+        } else {
+            opponentNameSpan.innerHTML = `⚡ ${team2}`;
+            opponentFullSpan.innerHTML = TEAM_FULL[team2];
+        }
+        renderSchedule();
+        liveStatusSpan.innerText = `🏏 Match ${currentMatchIndex+1}/${schedule.length}: ${team1} vs ${team2}`;
+        liveScoreDetails.innerHTML = `<span style="font-size:1rem;">⚡ Predict to start | ${team1} 🆚 ${team2} ⚡</span>`;
+    }
+
+    function renderSchedule() {
+        scheduleListDiv.innerHTML = schedule.map((m, idx) => {
+            const status = m.played ? `✅ ${m.winner} won` : "⏳ Upcoming";
+            const highlight = (idx === currentMatchIndex && !m.played) ? 'today-highlight' : '';
+            return `<div class="schedule-item ${highlight}"><span>${m.team1} vs ${m.team2}</span><span style="font-size:0.65rem;">${status}<br>${m.date}</span></div>`;
+        }).join('');
+    }
+
+    // Simulate individual player performance
+    function getPlayerPerformance(playerName, isWinner, strength) {
+        const baseRuns = strength === 'high' ? Math.floor(Math.random() * 70) + 40 : (strength === 'medium' ? Math.floor(Math.random() * 50) + 20 : Math.floor(Math.random() * 30) + 5);
+        const sixes = strength === 'high' ? Math.floor(Math.random() * 4) + 1 : (strength === 'medium' ? Math.floor(Math.random() * 2) : Math.floor(Math.random() * 1));
+        const fours = strength === 'high' ? Math.floor(Math.random() * 6) + 2 : (strength === 'medium' ? Math.floor(Math.random() * 4) + 1 : Math.floor(Math.random() * 2));
+        return { runs: baseRuns, sixes, fours };
+    }
+
+    function simulateMatch() {
+        if (!selectedToss) { dynamicResultDiv.innerHTML = "⚠️ Please select TOSS WINNER first!"; return; }
+        if (!selectedMatchWinner) { dynamicResultDiv.innerHTML = "⚠️ Please select MATCH WINNER first!"; return; }
+        if (!currentMatch || currentMatch.played) {
+            loadNextMatch();
+            if (!currentMatch || currentMatch.played) return;
+        }
+
+        let teamA = currentMatch.team1;
+        let teamB = currentMatch.team2;
+        let matchWinner = (selectedMatchWinner === "KGM") ? "KGM" : (teamA === "KGM" ? teamB : teamA);
+        if (selectedMatchWinner === "OPP") matchWinner = (teamA !== "KGM") ? teamA : teamB;
+        
+        let tossWinner = (selectedToss === "KGM") ? "KGM" : (teamA === "KGM" ? teamB : teamA);
+        
+        // Get players for each team
+        const winnerPlayers = TEAM_PLAYERS[matchWinner];
+        const loserPlayers = TEAM_PLAYERS[matchWinner === teamA ? teamB : teamA];
+        
+        // Simulate individual performances
+        let winnerPerformances = [];
+        let loserPerformances = [];
+        let winnerTotal = 0, loserTotal = 0;
+        let winnerSixes = 0, winnerFours = 0, loserSixes = 0, loserFours = 0;
+        
+        winnerPlayers.forEach(player => {
+            const perf = getPlayerPerformance(player, true, matchWinner === "KGM" ? 'high' : 'medium');
+            winnerPerformances.push({ player, ...perf });
+            winnerTotal += perf.runs;
+            winnerSixes += perf.sixes;
+            winnerFours += perf.fours;
+            playerStats[player].runs += perf.runs;
+            playerStats[player].sixes += perf.sixes;
+            playerStats[player].fours += perf.fours;
+            playerStats[player].matches += 1;
+        });
+        
+        loserPlayers.forEach(player => {
+            const perf = getPlayerPerformance(player, false, 'low');
+            loserPerformances.push({ player, ...perf });
+            loserTotal += perf.runs;
+            loserSixes += perf.sixes;
+            loserFours += perf.fours;
+            playerStats[player].runs += perf.runs;
+            playerStats[player].sixes += perf.sixes;
+            playerStats[player].fours += perf.fours;
+            playerStats[player].matches += 1;
+        });
+        
+        // Ensure winner total > loser total
+        if (winnerTotal <= loserTotal) winnerTotal = loserTotal + Math.floor(Math.random() * 30) + 15;
+        
+        // Find Man of the Match (highest scorer from winning team)
+        let motmPlayer = winnerPerformances.sort((a,b) => b.runs - a.runs)[0];
+        playerStats[motmPlayer.player].motm += 1;
+        
+        // Update highest individual score
+        let allPerformances = [...winnerPerformances, ...loserPerformances];
+        let highest = allPerformances.sort((a,b) => b.runs - a.runs)[0];
+        if (highest.runs > highestIndividualScore.runs) {
+            highestIndividualScore = { runs: highest.runs, player: highest.player, team: matchWinner };
+        }
+        
+        // Update team stats
+        const loser = matchWinner === teamA ? teamB : teamA;
+        teamStats[matchWinner].played += 1;
+        teamStats[matchWinner].wins += 1;
+        teamStats[matchWinner].pts += 2;
+        teamStats[loser].played += 1;
+        teamStats[loser].losses += 1;
+        
+        // NRR calculation
+        let nrrWinner = (winnerTotal/20) - (loserTotal/20);
+        let nrrLoser = (loserTotal/20) - (winnerTotal/20);
+        teamStats[matchWinner].nrr = +(teamStats[matchWinner].nrr + nrrWinner/3).toFixed(2);
+        teamStats[loser].nrr = +(teamStats[loser].nrr + nrrLoser/3).toFixed(2);
+        
+        currentMatch.played = true;
+        currentMatch.winner = matchWinner;
+        currentMatchIndex++;
+        
+        // Store match record
+        matchHistory.unshift({
+            match: `${teamA} vs ${teamB}`, winner: matchWinner, toss: tossWinner,
+            motm: motmPlayer.player, motmRuns: motmPlayer.runs, motmSixes: motmPlayer.sixes, motmFours: motmPlayer.fours,
+            winnerTotal, loserTotal, winnerSixes, winnerFours, date: currentMatch.date
+        });
+        
+        // Update UI displays
+        updatePointsTable();
+        updateLeaderboards();
+        updateRecentRecords();
+        
+        // Live Scoreboard
+        liveStatusSpan.innerText = `🏏 FINISHED: ${matchWinner} won`;
+        liveScoreDetails.innerHTML = `
+            <div style="font-size:1rem;">🏆 ${matchWinner} won by ${winnerTotal - loserTotal} runs</div>
+            <div>${teamA} ${matchWinner===teamA ? winnerTotal : loserTotal}/${Math.floor(Math.random()*5)+3} | ${teamB} ${matchWinner===teamB ? winnerTotal : loserTotal}/${Math.floor(Math.random()*5)+3}</div>
+            <div>💥 Sixes: ${matchWinner===teamA ? winnerSixes : loserSixes} | Fours: ${matchWinner===teamA ? winnerFours : loserFours}</div>
+        `;
+        
+        dynamicResultDiv.innerHTML = `
+            <div>🎲 TOSS: ${tossWinner} won the toss</div>
+            <div class="score-digit" style="font-size:1.3rem;">🏆 ${matchWinner} wins by ${winnerTotal - loserTotal} runs</div>
+            <div>⭐ MAN OF THE MATCH: ${motmPlayer.player} (${motmPlayer.runs} runs, ${motmPlayer.sixes}六, ${motmPlayer.fours}四)</div>
+            <div>📊 ${teamA} ${matchWinner===teamA ? winnerTotal : loserTotal} | ${teamB} ${matchWinner===teamB ? winnerTotal : loserTotal}</div>
+        `;
+        
+        // Auto load next match
+        setTimeout(() => {
+            if (currentMatchIndex < schedule.length) loadNextMatch();
+            else {
+                liveStatusSpan.innerText = "🏆 TOURNAMENT COMPLETE! 🏆";
+                liveScoreDetails.innerHTML = "<span>👉 Season Over! Click Reset to Play Again 👈</span>";
+            }
+        }, 2500);
+    }
+    
+    function updatePointsTable() {
+        const sorted = [...ALL_TEAMS].sort((a,b) => teamStats[b].pts - teamStats[a].pts || teamStats[b].nrr - teamStats[a].nrr);
+        pointsTableBody.innerHTML = sorted.map(team => `
+            <tr><td><strong>${team}</strong><br><span style="font-size:0.6rem;">${TEAM_FULL[team].substring(0,6)}</span></td>
+            <td>${teamStats[team].played}</td><td>${teamStats[team].wins}</td><td>${teamStats[team].losses}</td>
+            <td>${teamStats[team].pts}</td><td>${teamStats[team].nrr.toFixed(2)}</td></tr>
+        `).join('');
+    }
+    
+    function updateLeaderboards() {
+        // Orange Cap (most runs)
+        let orangeLeader = { player: "", runs: 0 };
+        for (let p in playerStats) {
+            if (playerStats[p].runs > orangeLeader.runs) {
+                orangeLeader = { player: p, runs: playerStats[p].runs };
+            }
+        }
+        orangeCapHolder.innerText = orangeLeader.player || "-";
+        orangeCapRuns.innerText = `Runs: ${orangeLeader.runs}`;
+        
+        // Most Sixes
+        let sixLeader = { player: "", sixes: 0 };
+        for (let p in playerStats) {
+            if (playerStats[p].sixes > sixLeader.sixes) sixLeader = { player: p, sixes: playerStats[p].sixes };
+        }
+        mostSixesHolder.innerText = sixLeader.player || "-";
+        mostSixesCount.innerText = `Sixes: ${sixLeader.sixes}`;
+        
+        // Most Fours
+        let fourLeader = { player: "", fours: 0 };
+        for (let p in playerStats) {
+            if (playerStats[p].fours > fourLeader.fours) fourLeader = { player: p, fours: playerStats[p].fours };
+        }
+        mostFoursHolder.innerText = fourLeader.player || "-";
+        mostFoursCount.innerText = `Fours: ${fourLeader.fours}`;
+        
+        // Highest Scorecard
+        highestScorecard.innerText = highestIndividualScore.runs > 0 ? `${highestIndividualScore.runs} runs` : "-";
+        highestScorerName.innerText = highestIndividualScore.player ? `${highestIndividualScore.player} (${highestIndividualScore.team})` : "-";
+    }
+    
+    function updateRecentRecords() {
+        if (matchHistory.length === 0) {
+            recentRecordsList.innerHTML = "- No matches yet";
+            motmDisplay.innerHTML = "🏅 No matches yet";
+            return;
+        }
+        const recent = matchHistory[0];
+        motmDisplay.innerHTML = `🏅 ${recent.motm} (${recent.motmRuns} runs, ${recent.motmSixes}六, ${recent.motmFours}四)`;
+        recentRecordsList.innerHTML = matchHistory.slice(0, 4).map(m => 
+            `<div class="record-item">${m.match} | 🏆${m.winner} | MOM:${m.motm}</div>`
+        ).join('');
+    }
+    
+    function resetTournament() {
+        ALL_TEAMS.forEach(team => {
+            teamStats[team] = { played: 0, wins: 0, losses: 0, pts: 0, nrr: 0 };
+        });
+        for (let p in playerStats) {
+            playerStats[p] = { runs: 0, sixes: 0, fours: 0, matches: 0, motm: 0, team: playerStats[p].team };
+        }
+        highestIndividualScore = { runs: 0, player: "", team: "" };
+        matchHistory = [];
+        schedule = generateSchedule();
+        currentMatchIndex = 0;
+        loadNextMatch();
+        updatePointsTable();
+        updateLeaderboards();
+        updateRecentRecords();
+        dynamicResultDiv.innerHTML = "✨ New Season Started! Predict & Simulate ✨";
+        liveScoreDetails.innerHTML = `<span style="font-size:1rem;">⚡ New fixtures ready! ⚡</span>`;
+        liveStatusSpan.innerText = "🏏 New Season Kickoff";
+    }
+    
+    // Active button styles
+    function updateTossActive() { tossBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-toss') === selectedToss)); }
+    function updateMatchActive() { matchBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-match') === selectedMatchWinner)); }
+    tossBtns.forEach(btn => btn.addEventListener('click', () => { selectedToss = btn.getAttribute('data-toss'); updateTossActive(); }));
+    matchBtns.forEach(btn => btn.addEventListener('click', () => { selectedMatchWinner = btn.getAttribute('data-match'); updateMatchActive(); }));
+    simulateBtn.addEventListener('click', simulateMatch);
+    
+    // Initialize
+    loadNextMatch();
+    updatePointsTable();
+    updateLeaderboards();
+</script>
+</body>
+</html>
