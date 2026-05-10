@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Kortlagudem Premier League | Orange Cap | Most 6s/4s | Highest Score</title>
+    <title>OneSide Season 2026 | KGM Village Premier League</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0a2a25 0%, #041a17 100%);
+            background: linear-gradient(135deg, #0a2a25 0%, #031412 100%);
             min-height: 100vh;
             padding: 20px;
             color: #f4f9f0;
@@ -30,11 +30,12 @@
         .game-zone {
             flex: 2;
             min-width: 320px;
-            background: rgba(0, 28, 24, 0.85);
+            background: rgba(0, 28, 24, 0.88);
             backdrop-filter: blur(4px);
             border-radius: 48px;
             padding: 24px;
-            border: 1px solid rgba(255, 190, 80, 0.4);
+            border: 1px solid rgba(255, 190, 80, 0.5);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.5);
         }
 
         .stats-zone {
@@ -46,11 +47,11 @@
         }
 
         .card {
-            background: rgba(8, 35, 30, 0.92);
+            background: rgba(8, 35, 30, 0.94);
             backdrop-filter: blur(4px);
             border-radius: 32px;
             padding: 20px;
-            border: 1px solid rgba(255, 200, 100, 0.35);
+            border: 1px solid rgba(255, 200, 100, 0.4);
         }
 
         .card h2 {
@@ -71,15 +72,26 @@
             border-radius: 48px;
             padding: 14px 12px;
             margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
         .main-team-name {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 800;
             background: linear-gradient(120deg, #FFE6B3, #FF9430);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+        }
+
+        .season-badge {
+            background: #ffaa3366;
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            margin-top: 5px;
         }
 
         .team-badge {
@@ -101,6 +113,10 @@
         .team-name {
             font-weight: 800;
             font-size: 1.5rem;
+        }
+
+        .team-logo {
+            font-size: 2rem;
         }
 
         .vs {
@@ -162,23 +178,28 @@
         }
 
         .score-digit {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 800;
         }
 
-        .schedule-list, .players-list {
-            max-height: 180px;
+        .schedule-list, .logger-list {
+            max-height: 200px;
             overflow-y: auto;
             font-size: 0.75rem;
         }
 
-        .schedule-item, .player-item, .record-item {
+        .schedule-item, .logger-item {
             background: #0e4a3e;
             margin: 6px 0;
             padding: 8px 12px;
             border-radius: 20px;
             display: flex;
             justify-content: space-between;
+        }
+
+        .logger-item.oneside-win {
+            border-left: 4px solid #FFD700;
+            background: #1a6a5a;
         }
 
         .points-table {
@@ -203,16 +224,26 @@
             font-weight: bold;
         }
 
-        .orange-cap {
-            background: linear-gradient(135deg, #FF8C42, #FF5722);
+        .oneside-tag {
+            background: #FF5722;
             padding: 2px 8px;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
+            margin-left: 6px;
         }
 
         .match-date {
             font-size: 0.7rem;
             color: #FFC085;
+        }
+
+        .kgm-photo {
+            background: linear-gradient(145deg, #2a7a6a, #1a5a4a);
+            border-radius: 40px;
+            padding: 8px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
         }
     </style>
 </head>
@@ -221,15 +252,18 @@
     <!-- LEFT GAME ZONE -->
     <div class="game-zone">
         <div class="village-header">
-            <div>🏡 KORTLAGUDEM PREMIER LEAGUE 🏡</div>
+            <div>🏡 KORTLAGUDEM VILLAGE PREMIER LEAGUE 🏡</div>
             <div class="main-team-name">⚡ KGM SUPERSTARS ⚡</div>
-            <div style="font-size:0.7rem;">Season 2025 | Orange Cap Race | Most Sixes/Fours</div>
+            <div class="season-badge">🏆 ONESIDE SEASON 2026 🏆</div>
+            <div class="kgm-photo">
+                📸 KGM TEAM LOGO | ONESIDE CHAMPIONS | capt: AKSHAY
+            </div>
         </div>
 
         <!-- Live Scoreboard -->
         <div class="live-scoreboard" id="liveScoreboard">
             <div style="display: flex; justify-content: space-between;">
-                <span>🏏 LIVE SCORE - TODAY'S MATCH</span>
+                <span>🏏 LIVE ONESIDE SCORE</span>
                 <span id="liveStatus">⚡ Match not started</span>
             </div>
             <div id="liveScoreDetails" style="text-align: center; margin-top: 12px;">
@@ -238,31 +272,31 @@
         </div>
 
         <div class="team-badge" id="matchTeamsContainer">
-            <div class="team-card"><span class="team-name">🦁 KGM</span><br><span>Akshay(C)+6</span></div>
+            <div class="team-card"><div class="team-logo">🦁</div><span class="team-name">KGM</span><br><span>Kortlagudem</span></div>
             <div class="vs">VS</div>
-            <div class="team-card"><span class="team-name" id="opponentName">⚡ NKP</span><br><span id="opponentFull">Nelakondapally</span></div>
+            <div class="team-card"><div class="team-logo" id="opponentLogo">⚡</div><span class="team-name" id="opponentName">NKP</span><br><span id="opponentFull">Nelakondapally</span></div>
         </div>
-        <div class="match-date" id="matchDateDisplay" style="text-align:center; margin-bottom:5px;">📅 Match Date: 15 May 2025</div>
+        <div class="match-date" id="matchDateDisplay" style="text-align:center; margin:8px 0;">📅 Match Date: 15 May 2026</div>
 
         <div class="prediction-panel">
             <div class="pick-group">
-                <label>🎲 PREDICT TOSS WINNER:</label>
+                <label>🎲 ONESIDE TOSS PREDICT:</label>
                 <div class="btn-group" id="tossBtnGroup">
                     <button class="team-btn" data-toss="KGM">🏆 KGM win toss</button>
                     <button class="team-btn" data-toss="OPP">🔥 OPPONENT win toss</button>
                 </div>
             </div>
             <div class="pick-group">
-                <label>🏆 PREDICT MATCH WINNER:</label>
+                <label>🏆 ONESIDE MATCH WINNER:</label>
                 <div class="btn-group" id="matchBtnGroup">
-                    <button class="team-btn" data-match="KGM">🌟 KGM Victory</button>
+                    <button class="team-btn" data-match="KGM">🌟 KGM Victory (OneSide)</button>
                     <button class="team-btn" data-match="OPP">⚡ Opponent Victory</button>
                 </div>
             </div>
-            <button class="simulate-btn" id="simulateBtn">🏏 PLAY MATCH | SIMULATE NOW 🏏</button>
+            <button class="simulate-btn" id="simulateBtn">🏏 PLAY ONESIDE MATCH | SIMULATE 2026 🏏</button>
         </div>
         <div id="resultArea" style="background:#0a362e; border-radius:28px; padding:16px; margin-top:15px; text-align:center;">
-            <div id="dynamicResult">👉 Select Toss & Match Winner, then SIMULATE 👈</div>
+            <div id="dynamicResult">👉 Select Toss & Match Winner, then SIMULATE OneSide 👈</div>
         </div>
     </div>
 
@@ -270,59 +304,55 @@
     <div class="stats-zone">
         <!-- Points Table -->
         <div class="card">
-            <h2>📊 POINTS TABLE</h2>
+            <h2>📊 POINTS TABLE (2026)</h2>
             <table class="points-table" id="pointsTable">
                 <thead><tr><th>Team</th><th>M</th><th>W</th><th>L</th><th>Pts</th><th>NRR</th></tr></thead>
                 <tbody id="pointsTableBody"></tbody>
             </table>
-            <div style="font-size:0.65rem; margin-top:6px;">*Points change after each match</div>
         </div>
 
-        <!-- Orange Cap & Most 6s/4s Leaderboards -->
+        <!-- LEADERBOARDS: Highest Score, Most 6s/4s, Power Scorer -->
         <div class="card">
-            <h2>🏆 TOP PERFORMERS 🏆</h2>
+            <h2>🏆 ONESIDE LEADERBOARDS 🏆</h2>
             <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
-                <div style="flex:1; background:#0e423a; border-radius:20px; padding:10px;">
-                    <div style="font-size:0.8rem; font-weight:bold;">🥇 ORANGE CAP</div>
-                    <div id="orangeCapHolder" style="font-size:1rem;">-</div>
-                    <div id="orangeCapRuns" style="font-size:0.7rem;">Runs: 0</div>
+                <div style="flex:1; background:#0e423a; border-radius:20px; padding:8px;">
+                    <div style="font-size:0.7rem;">🏅 HIGHEST SCORE</div>
+                    <div id="highestScorerName" style="font-size:0.9rem;">-</div>
+                    <div id="highestScorecard" style="font-size:0.7rem;">Runs: 0</div>
                 </div>
-                <div style="flex:1; background:#0e423a; border-radius:20px; padding:10px;">
-                    <div style="font-size:0.8rem; font-weight:bold;">💥 MOST SIXES</div>
-                    <div id="mostSixesHolder" style="font-size:1rem;">-</div>
+                <div style="flex:1; background:#0e423a; border-radius:20px; padding:8px;">
+                    <div style="font-size:0.7rem;">💥 MOST SIXES</div>
+                    <div id="mostSixesHolder" style="font-size:0.9rem;">-</div>
                     <div id="mostSixesCount" style="font-size:0.7rem;">Sixes: 0</div>
                 </div>
-                <div style="flex:1; background:#0e423a; border-radius:20px; padding:10px;">
-                    <div style="font-size:0.8rem; font-weight:bold;">🔥 MOST FOURS</div>
-                    <div id="mostFoursHolder" style="font-size:1rem;">-</div>
+                <div style="flex:1; background:#0e423a; border-radius:20px; padding:8px;">
+                    <div style="font-size:0.7rem;">🔥 MOST FOURS</div>
+                    <div id="mostFoursHolder" style="font-size:0.9rem;">-</div>
                     <div id="mostFoursCount" style="font-size:0.7rem;">Fours: 0</div>
                 </div>
             </div>
-            <div style="background:#0a352e; border-radius:20px; padding:12px; margin-top:5px;">
-                <div style="font-weight:bold;">🏅 HIGHEST INDIVIDUAL SCORE</div>
-                <div id="highestScorecard" style="font-size:0.9rem;">-</div>
-                <div id="highestScorerName" style="font-size:0.75rem;">-</div>
+            <div style="background:#0a352e; border-radius:20px; padding:10px;">
+                <div style="font-weight:bold;">⚡ MOST POWER SCORER (Overall Runs)</div>
+                <div id="powerScorer" style="font-size:1rem;">-</div>
+                <div id="powerScorerRuns" style="font-size:0.7rem;">Runs: 0</div>
             </div>
+        </div>
+
+        <!-- ONESIDE LOGGER - Match History with Toss/Win/Loss -->
+        <div class="card">
+            <h2>📜 ONESIDE LOGGER (Toss+Win+Loss)</h2>
+            <div id="loggerList" class="logger-list">Loading...</div>
+            <div style="margin-top:8px; font-size:0.65rem;">🏆 OneSide Record | KGM Dominance Tracker</div>
         </div>
 
         <!-- Match Schedule -->
         <div class="card">
-            <h2>📅 MATCH SCHEDULE</h2>
+            <h2>📅 2026 SCHEDULE</h2>
             <div id="scheduleList" class="schedule-list">Loading...</div>
-        </div>
-
-        <!-- Man of the Match & Recent Records -->
-        <div class="card">
-            <h2>⭐ MAN OF THE MATCH</h2>
-            <div id="motmDisplay" style="font-size:1rem; text-align:center; padding:8px;">🏅 No matches yet</div>
-            <div style="margin-top:12px; font-size:0.7rem; background:#0e423a; border-radius:20px; padding:8px;">
-                <div>📋 RECENT MATCH RECORDS:</div>
-                <div id="recentRecordsList" style="max-height:100px; overflow-y:auto;">-</div>
-            </div>
         </div>
     </div>
 </div>
-<footer>🌾 Kortlagudem Premier League | Predict Toss & Winner | Orange Cap | Most 6s/4s | Highest Scorecard | Man of the Match 🌾</footer>
+<footer>🌾 Kortlagudem OneSide Season 2026 | KGM | NKP | AMG | RJP | MNP | ANG | CNR | Predict Toss & Winner | Most 6/4 | Highest Score | Man of the Match Logger 🌾</footer>
 
 <script>
     // ======================= TEAMS & PLAYERS =======================
@@ -331,8 +361,9 @@
         KGM: "Kortlagudem Giants", NKP: "Nelakondapally", AMG: "Ammagudem",
         RJP: "Rajeshwarapuram", MNP: "Mandrujupally", ANG: "Ananthaangar", CNR: "Chennaram"
     };
+    const TEAM_LOGO = { KGM:"🦁", NKP:"🐯", AMG:"🐘", RJP:"🐉", MNP:"🐅", ANG:"🦚", CNR:"🐊" };
     
-    // Player lists for each team (for individual performances)
+    // Player lists for each team (9 players each)
     const TEAM_PLAYERS = {
         KGM: ["Akshay", "Pandu", "Jashu", "Sanju", "Surendar", "Venky", "Sandeep", "Karthik", "Rajesh"],
         NKP: ["Naveen", "Sai Kumar", "Vinod", "Mallesh", "Ravi Teja", "Praveen", "Sridhar", "Ganesh", "Kiran"],
@@ -343,13 +374,15 @@
         CNR: ["Chenna", "Sampath", "Naresh", "Varun", "Jagan", "Murali", "Sravan", "Koti", "Bhaskar"]
     };
 
-    // Stats for teams & individual players
+    // Stats
     let teamStats = {};
-    let playerStats = {}; // { playerName: { runs, sixes, fours, matches, motm } }
-    let matchHistory = [];
+    let playerStats = {}; // runs, sixes, fours, matches, motm
+    let matchLogger = []; // { match, tossWinner, matchWinner, motm, scoreDetail, onesideTag, date }
     let schedule = [];
     let currentMatchIndex = 0;
     let currentMatch = null;
+    let selectedToss = null;
+    let selectedMatchWinner = null;
 
     // Initialize stats
     ALL_TEAMS.forEach(team => {
@@ -359,15 +392,14 @@
         });
     });
 
-    // Generate match schedule (round robin)
+    // Generate Schedule for 2026
     function generateSchedule() {
         let matches = [];
         for (let i = 0; i < ALL_TEAMS.length; i++) {
             for (let j = i + 1; j < ALL_TEAMS.length; j++) {
-                matches.push({ team1: ALL_TEAMS[i], team2: ALL_TEAMS[j], played: false, winner: null, date: `May ${Math.floor(Math.random() * 20) + 1}, 2025` });
+                matches.push({ team1: ALL_TEAMS[i], team2: ALL_TEAMS[j], played: false, winner: null, date: `May ${Math.floor(Math.random() * 20) + 10}, 2026` });
             }
         }
-        // shuffle
         for (let i = matches.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [matches[i], matches[j]] = [matches[j], matches[i]];
@@ -377,103 +409,107 @@
 
     schedule = generateSchedule();
 
-    // DOM elements
-    let selectedToss = null;
-    let selectedMatchWinner = null;
+    // DOM Elements
     const tossBtns = document.querySelectorAll('[data-toss]');
     const matchBtns = document.querySelectorAll('[data-match]');
     const simulateBtn = document.getElementById('simulateBtn');
     const opponentNameSpan = document.getElementById('opponentName');
     const opponentFullSpan = document.getElementById('opponentFull');
+    const opponentLogo = document.getElementById('opponentLogo');
     const dynamicResultDiv = document.getElementById('dynamicResult');
     const pointsTableBody = document.getElementById('pointsTableBody');
     const scheduleListDiv = document.getElementById('scheduleList');
     const liveScoreDetails = document.getElementById('liveScoreDetails');
     const liveStatusSpan = document.getElementById('liveStatus');
-    const orangeCapHolder = document.getElementById('orangeCapHolder');
-    const orangeCapRuns = document.getElementById('orangeCapRuns');
+    const loggerListDiv = document.getElementById('loggerList');
+    const highestScorerNameSpan = document.getElementById('highestScorerName');
+    const highestScorecardSpan = document.getElementById('highestScorecard');
     const mostSixesHolder = document.getElementById('mostSixesHolder');
     const mostSixesCount = document.getElementById('mostSixesCount');
     const mostFoursHolder = document.getElementById('mostFoursHolder');
     const mostFoursCount = document.getElementById('mostFoursCount');
-    const highestScorecard = document.getElementById('highestScorecard');
-    const highestScorerName = document.getElementById('highestScorerName');
-    const motmDisplay = document.getElementById('motmDisplay');
-    const recentRecordsList = document.getElementById('recentRecordsList');
+    const powerScorerSpan = document.getElementById('powerScorer');
+    const powerScorerRunsSpan = document.getElementById('powerScorerRuns');
     const matchDateDisplay = document.getElementById('matchDateDisplay');
 
-    let highestIndividualScore = { runs: 0, player: "", team: "" };
+    let highestIndividual = { runs: 0, player: "", team: "" };
 
     function loadNextMatch() {
         if (currentMatchIndex >= schedule.length) {
-            // tournament over, reset option
-            if (confirm("🏆 Season Complete! Reset for new season?")) resetTournament();
-            else return;
+            if (confirm("🏆 ONESIDE SEASON 2026 COMPLETE! Reset for new season?")) resetTournament();
+            return;
         }
         currentMatch = schedule[currentMatchIndex];
         const team1 = currentMatch.team1;
         const team2 = currentMatch.team2;
-        matchDateDisplay.innerText = `📅 Match Date: ${currentMatch.date}`;
+        matchDateDisplay.innerText = `📅 ${currentMatch.date} | OneSide Battle`;
         
         if (team1 === "KGM") {
-            opponentNameSpan.innerHTML = `⚡ ${team2}`;
+            opponentNameSpan.innerHTML = team2;
             opponentFullSpan.innerHTML = TEAM_FULL[team2];
+            opponentLogo.innerHTML = TEAM_LOGO[team2] || "⚡";
         } else if (team2 === "KGM") {
-            opponentNameSpan.innerHTML = `⚡ ${team1}`;
+            opponentNameSpan.innerHTML = team1;
             opponentFullSpan.innerHTML = TEAM_FULL[team1];
+            opponentLogo.innerHTML = TEAM_LOGO[team1] || "⚡";
         } else {
-            opponentNameSpan.innerHTML = `⚡ ${team2}`;
+            opponentNameSpan.innerHTML = team2;
             opponentFullSpan.innerHTML = TEAM_FULL[team2];
+            opponentLogo.innerHTML = TEAM_LOGO[team2] || "⚡";
         }
         renderSchedule();
-        liveStatusSpan.innerText = `🏏 Match ${currentMatchIndex+1}/${schedule.length}: ${team1} vs ${team2}`;
-        liveScoreDetails.innerHTML = `<span style="font-size:1rem;">⚡ Predict to start | ${team1} 🆚 ${team2} ⚡</span>`;
+        liveStatusSpan.innerText = `🏏 OneSide Match ${currentMatchIndex+1}/${schedule.length}: ${team1} vs ${team2}`;
+        liveScoreDetails.innerHTML = `<span>🔥 Predict OneSide Toss & Winner 🔥</span>`;
     }
 
     function renderSchedule() {
         scheduleListDiv.innerHTML = schedule.map((m, idx) => {
             const status = m.played ? `✅ ${m.winner} won` : "⏳ Upcoming";
             const highlight = (idx === currentMatchIndex && !m.played) ? 'today-highlight' : '';
-            return `<div class="schedule-item ${highlight}"><span>${m.team1} vs ${m.team2}</span><span style="font-size:0.65rem;">${status}<br>${m.date}</span></div>`;
+            return `<div class="schedule-item ${highlight}"><span>${m.team1} vs ${m.team2}</span><span>${status}<br>${m.date}</span></div>`;
         }).join('');
     }
 
-    // Simulate individual player performance
-    function getPlayerPerformance(playerName, isWinner, strength) {
-        const baseRuns = strength === 'high' ? Math.floor(Math.random() * 70) + 40 : (strength === 'medium' ? Math.floor(Math.random() * 50) + 20 : Math.floor(Math.random() * 30) + 5);
-        const sixes = strength === 'high' ? Math.floor(Math.random() * 4) + 1 : (strength === 'medium' ? Math.floor(Math.random() * 2) : Math.floor(Math.random() * 1));
-        const fours = strength === 'high' ? Math.floor(Math.random() * 6) + 2 : (strength === 'medium' ? Math.floor(Math.random() * 4) + 1 : Math.floor(Math.random() * 2));
-        return { runs: baseRuns, sixes, fours };
+    function renderLogger() {
+        if (matchLogger.length === 0) {
+            loggerListDiv.innerHTML = '<div class="logger-item">✨ No OneSide matches yet. Simulate now ✨</div>';
+            return;
+        }
+        loggerListDiv.innerHTML = matchLogger.map(log => `
+            <div class="logger-item ${log.onesideTag ? 'oneside-win' : ''}">
+                <span><strong>${log.match}</strong><br>🏆 ${log.matchWinner} won | 🎲 Toss: ${log.tossWinner}</span>
+                <span style="font-size:0.65rem;">⭐MOM: ${log.motm}<br>📊 ${log.scoreDetail}</span>
+            </div>
+        `).join('');
+    }
+
+    // Player performance simulation
+    function getPlayerPerformance(strength) {
+        const runs = strength === 'high' ? Math.floor(Math.random() * 70) + 45 : (strength === 'medium' ? Math.floor(Math.random() * 50) + 25 : Math.floor(Math.random() * 30) + 8);
+        const sixes = strength === 'high' ? Math.floor(Math.random() * 4) + 2 : (strength === 'medium' ? Math.floor(Math.random() * 2) + 1 : Math.floor(Math.random() * 1));
+        const fours = strength === 'high' ? Math.floor(Math.random() * 6) + 3 : (strength === 'medium' ? Math.floor(Math.random() * 4) + 2 : Math.floor(Math.random() * 2) + 1);
+        return { runs, sixes, fours };
     }
 
     function simulateMatch() {
-        if (!selectedToss) { dynamicResultDiv.innerHTML = "⚠️ Please select TOSS WINNER first!"; return; }
-        if (!selectedMatchWinner) { dynamicResultDiv.innerHTML = "⚠️ Please select MATCH WINNER first!"; return; }
-        if (!currentMatch || currentMatch.played) {
-            loadNextMatch();
-            if (!currentMatch || currentMatch.played) return;
-        }
+        if (!selectedToss) { dynamicResultDiv.innerHTML = "⚠️ Predict TOSS WINNER first!"; return; }
+        if (!selectedMatchWinner) { dynamicResultDiv.innerHTML = "⚠️ Predict MATCH WINNER first!"; return; }
+        if (!currentMatch || currentMatch.played) { loadNextMatch(); if (!currentMatch || currentMatch.played) return; }
 
         let teamA = currentMatch.team1;
         let teamB = currentMatch.team2;
         let matchWinner = (selectedMatchWinner === "KGM") ? "KGM" : (teamA === "KGM" ? teamB : teamA);
         if (selectedMatchWinner === "OPP") matchWinner = (teamA !== "KGM") ? teamA : teamB;
-        
         let tossWinner = (selectedToss === "KGM") ? "KGM" : (teamA === "KGM" ? teamB : teamA);
         
-        // Get players for each team
         const winnerPlayers = TEAM_PLAYERS[matchWinner];
         const loserPlayers = TEAM_PLAYERS[matchWinner === teamA ? teamB : teamA];
-        
-        // Simulate individual performances
-        let winnerPerformances = [];
-        let loserPerformances = [];
         let winnerTotal = 0, loserTotal = 0;
         let winnerSixes = 0, winnerFours = 0, loserSixes = 0, loserFours = 0;
+        let winnerPerf = [];
         
         winnerPlayers.forEach(player => {
-            const perf = getPlayerPerformance(player, true, matchWinner === "KGM" ? 'high' : 'medium');
-            winnerPerformances.push({ player, ...perf });
+            const perf = getPlayerPerformance(matchWinner === "KGM" ? 'high' : 'medium');
             winnerTotal += perf.runs;
             winnerSixes += perf.sixes;
             winnerFours += perf.fours;
@@ -481,11 +517,11 @@
             playerStats[player].sixes += perf.sixes;
             playerStats[player].fours += perf.fours;
             playerStats[player].matches += 1;
+            winnerPerf.push({ player, runs: perf.runs, sixes: perf.sixes, fours: perf.fours });
         });
         
         loserPlayers.forEach(player => {
-            const perf = getPlayerPerformance(player, false, 'low');
-            loserPerformances.push({ player, ...perf });
+            const perf = getPlayerPerformance('low');
             loserTotal += perf.runs;
             loserSixes += perf.sixes;
             loserFours += perf.fours;
@@ -495,21 +531,20 @@
             playerStats[player].matches += 1;
         });
         
-        // Ensure winner total > loser total
-        if (winnerTotal <= loserTotal) winnerTotal = loserTotal + Math.floor(Math.random() * 30) + 15;
+        if (winnerTotal <= loserTotal) winnerTotal = loserTotal + Math.floor(Math.random() * 35) + 20;
         
-        // Find Man of the Match (highest scorer from winning team)
-        let motmPlayer = winnerPerformances.sort((a,b) => b.runs - a.runs)[0];
-        playerStats[motmPlayer.player].motm += 1;
+        // Man of the Match (highest scorer from winning team)
+        let motm = winnerPerf.sort((a,b) => b.runs - a.runs)[0];
+        playerStats[motm.player].motm += 1;
         
         // Update highest individual score
-        let allPerformances = [...winnerPerformances, ...loserPerformances];
-        let highest = allPerformances.sort((a,b) => b.runs - a.runs)[0];
-        if (highest.runs > highestIndividualScore.runs) {
-            highestIndividualScore = { runs: highest.runs, player: highest.player, team: matchWinner };
+        let allPlayers = [...winnerPerf, ...loserPlayers.map(p => ({ player: p, runs: playerStats[p].runs }))];
+        let highestInMatch = winnerPerf[0];
+        if (highestInMatch.runs > highestIndividual.runs) {
+            highestIndividual = { runs: highestInMatch.runs, player: highestInMatch.player, team: matchWinner };
         }
         
-        // Update team stats
+        // Update Team Stats
         const loser = matchWinner === teamA ? teamB : teamA;
         teamStats[matchWinner].played += 1;
         teamStats[matchWinner].wins += 1;
@@ -517,7 +552,6 @@
         teamStats[loser].played += 1;
         teamStats[loser].losses += 1;
         
-        // NRR calculation
         let nrrWinner = (winnerTotal/20) - (loserTotal/20);
         let nrrLoser = (loserTotal/20) - (winnerTotal/20);
         teamStats[matchWinner].nrr = +(teamStats[matchWinner].nrr + nrrWinner/3).toFixed(2);
@@ -527,39 +561,44 @@
         currentMatch.winner = matchWinner;
         currentMatchIndex++;
         
-        // Store match record
-        matchHistory.unshift({
-            match: `${teamA} vs ${teamB}`, winner: matchWinner, toss: tossWinner,
-            motm: motmPlayer.player, motmRuns: motmPlayer.runs, motmSixes: motmPlayer.sixes, motmFours: motmPlayer.fours,
-            winnerTotal, loserTotal, winnerSixes, winnerFours, date: currentMatch.date
+        // Logger Entry (OneSide toss + win/loss)
+        matchLogger.unshift({
+            match: `${teamA} vs ${teamB}`,
+            tossWinner: tossWinner,
+            matchWinner: matchWinner,
+            motm: motm.player,
+            scoreDetail: `${matchWinner} ${winnerTotal}/${Math.floor(Math.random()*5)+2} | ${loser} ${loserTotal}/${Math.floor(Math.random()*7)+2}`,
+            onesideTag: matchWinner === "KGM",
+            date: currentMatch.date
         });
+        if (matchLogger.length > 10) matchLogger.pop();
         
-        // Update UI displays
+        // Update UI
         updatePointsTable();
         updateLeaderboards();
-        updateRecentRecords();
+        renderLogger();
         
-        // Live Scoreboard
-        liveStatusSpan.innerText = `🏏 FINISHED: ${matchWinner} won`;
+        // Live Score
+        liveStatusSpan.innerText = `🏆 ONESIDE: ${matchWinner} wins!`;
         liveScoreDetails.innerHTML = `
-            <div style="font-size:1rem;">🏆 ${matchWinner} won by ${winnerTotal - loserTotal} runs</div>
-            <div>${teamA} ${matchWinner===teamA ? winnerTotal : loserTotal}/${Math.floor(Math.random()*5)+3} | ${teamB} ${matchWinner===teamB ? winnerTotal : loserTotal}/${Math.floor(Math.random()*5)+3}</div>
+            <div class="score-digit">🏆 ${matchWinner} wins by ${winnerTotal - loserTotal} runs</div>
+            <div>🔥 ${teamA} ${matchWinner===teamA ? winnerTotal : loserTotal} | ${teamB} ${matchWinner===teamB ? winnerTotal : loserTotal}</div>
             <div>💥 Sixes: ${matchWinner===teamA ? winnerSixes : loserSixes} | Fours: ${matchWinner===teamA ? winnerFours : loserFours}</div>
         `;
         
         dynamicResultDiv.innerHTML = `
-            <div>🎲 TOSS: ${tossWinner} won the toss</div>
-            <div class="score-digit" style="font-size:1.3rem;">🏆 ${matchWinner} wins by ${winnerTotal - loserTotal} runs</div>
-            <div>⭐ MAN OF THE MATCH: ${motmPlayer.player} (${motmPlayer.runs} runs, ${motmPlayer.sixes}六, ${motmPlayer.fours}四)</div>
+            <div>🎲 ONESIDE TOSS: ${tossWinner} won toss</div>
+            <div class="score-digit">🏆 ${matchWinner} VICTORY (OneSide)</div>
+            <div>⭐ MAN OF THE MATCH: ${motm.player} (${motm.runs} runs, ${motm.sixes}六, ${motm.fours}四)</div>
             <div>📊 ${teamA} ${matchWinner===teamA ? winnerTotal : loserTotal} | ${teamB} ${matchWinner===teamB ? winnerTotal : loserTotal}</div>
+            <div class="oneside-tag" style="display:inline-block; margin-top:6px;">🔥 ONESIDE DOMINATION 2026 🔥</div>
         `;
         
-        // Auto load next match
         setTimeout(() => {
             if (currentMatchIndex < schedule.length) loadNextMatch();
             else {
-                liveStatusSpan.innerText = "🏆 TOURNAMENT COMPLETE! 🏆";
-                liveScoreDetails.innerHTML = "<span>👉 Season Over! Click Reset to Play Again 👈</span>";
+                liveStatusSpan.innerText = "🏆 ONESIDE SEASON 2026 COMPLETE! 🏆";
+                liveScoreDetails.innerHTML = "<span>👉 Click Simulate to Reset Season 👈</span>";
             }
         }, 2500);
     }
@@ -574,48 +613,27 @@
     }
     
     function updateLeaderboards() {
-        // Orange Cap (most runs)
-        let orangeLeader = { player: "", runs: 0 };
-        for (let p in playerStats) {
-            if (playerStats[p].runs > orangeLeader.runs) {
-                orangeLeader = { player: p, runs: playerStats[p].runs };
-            }
-        }
-        orangeCapHolder.innerText = orangeLeader.player || "-";
-        orangeCapRuns.innerText = `Runs: ${orangeLeader.runs}`;
+        // Highest Score
+        highestScorerNameSpan.innerText = highestIndividual.player ? `${highestIndividual.player} (${highestIndividual.team})` : "-";
+        highestScorecardSpan.innerText = highestIndividual.runs ? `${highestIndividual.runs} runs` : "0";
         
         // Most Sixes
         let sixLeader = { player: "", sixes: 0 };
-        for (let p in playerStats) {
-            if (playerStats[p].sixes > sixLeader.sixes) sixLeader = { player: p, sixes: playerStats[p].sixes };
-        }
+        for (let p in playerStats) if (playerStats[p].sixes > sixLeader.sixes) sixLeader = { player: p, sixes: playerStats[p].sixes };
         mostSixesHolder.innerText = sixLeader.player || "-";
         mostSixesCount.innerText = `Sixes: ${sixLeader.sixes}`;
         
         // Most Fours
         let fourLeader = { player: "", fours: 0 };
-        for (let p in playerStats) {
-            if (playerStats[p].fours > fourLeader.fours) fourLeader = { player: p, fours: playerStats[p].fours };
-        }
+        for (let p in playerStats) if (playerStats[p].fours > fourLeader.fours) fourLeader = { player: p, fours: playerStats[p].fours };
         mostFoursHolder.innerText = fourLeader.player || "-";
         mostFoursCount.innerText = `Fours: ${fourLeader.fours}`;
         
-        // Highest Scorecard
-        highestScorecard.innerText = highestIndividualScore.runs > 0 ? `${highestIndividualScore.runs} runs` : "-";
-        highestScorerName.innerText = highestIndividualScore.player ? `${highestIndividualScore.player} (${highestIndividualScore.team})` : "-";
-    }
-    
-    function updateRecentRecords() {
-        if (matchHistory.length === 0) {
-            recentRecordsList.innerHTML = "- No matches yet";
-            motmDisplay.innerHTML = "🏅 No matches yet";
-            return;
-        }
-        const recent = matchHistory[0];
-        motmDisplay.innerHTML = `🏅 ${recent.motm} (${recent.motmRuns} runs, ${recent.motmSixes}六, ${recent.motmFours}四)`;
-        recentRecordsList.innerHTML = matchHistory.slice(0, 4).map(m => 
-            `<div class="record-item">${m.match} | 🏆${m.winner} | MOM:${m.motm}</div>`
-        ).join('');
+        // Most Power Scorer (Overall Runs)
+        let powerLeader = { player: "", runs: 0 };
+        for (let p in playerStats) if (playerStats[p].runs > powerLeader.runs) powerLeader = { player: p, runs: playerStats[p].runs };
+        powerScorerSpan.innerText = powerLeader.player || "-";
+        powerScorerRunsSpan.innerText = `Total Runs: ${powerLeader.runs}`;
     }
     
     function resetTournament() {
@@ -625,30 +643,29 @@
         for (let p in playerStats) {
             playerStats[p] = { runs: 0, sixes: 0, fours: 0, matches: 0, motm: 0, team: playerStats[p].team };
         }
-        highestIndividualScore = { runs: 0, player: "", team: "" };
-        matchHistory = [];
+        highestIndividual = { runs: 0, player: "", team: "" };
+        matchLogger = [];
         schedule = generateSchedule();
         currentMatchIndex = 0;
         loadNextMatch();
         updatePointsTable();
         updateLeaderboards();
-        updateRecentRecords();
-        dynamicResultDiv.innerHTML = "✨ New Season Started! Predict & Simulate ✨";
-        liveScoreDetails.innerHTML = `<span style="font-size:1rem;">⚡ New fixtures ready! ⚡</span>`;
-        liveStatusSpan.innerText = "🏏 New Season Kickoff";
+        renderLogger();
+        dynamicResultDiv.innerHTML = "✨ ONESIDE SEASON 2026 RESET! Predict & Simulate ✨";
+        liveScoreDetails.innerHTML = `<span>⚡ New 2026 fixtures ready! ⚡</span>`;
+        liveStatusSpan.innerText = "🏏 OneSide 2026 Kickoff";
     }
     
-    // Active button styles
     function updateTossActive() { tossBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-toss') === selectedToss)); }
     function updateMatchActive() { matchBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-match') === selectedMatchWinner)); }
     tossBtns.forEach(btn => btn.addEventListener('click', () => { selectedToss = btn.getAttribute('data-toss'); updateTossActive(); }));
     matchBtns.forEach(btn => btn.addEventListener('click', () => { selectedMatchWinner = btn.getAttribute('data-match'); updateMatchActive(); }));
     simulateBtn.addEventListener('click', simulateMatch);
     
-    // Initialize
     loadNextMatch();
     updatePointsTable();
     updateLeaderboards();
+    renderLogger();
 </script>
 </body>
 </html>
